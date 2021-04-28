@@ -6,8 +6,9 @@ import dev.kissed.podlodka_compose.Screen
 import dev.kissed.podlodka_compose.data.BookmarksRepository
 import dev.kissed.podlodka_compose.data.SessionsRepository
 import dev.kissed.podlodka_compose.models.Session
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.flow.*
 
 class SessionListFeature(
   sessionsRepository: SessionsRepository,
@@ -17,20 +18,31 @@ class SessionListFeature(
 
   data class State(
     val sessions: List<Session>,
-    val bookmarks: Set<String>
+    val bookmarkIds: Set<String>
   ) {
+    val bookmarks: List<Session> by lazy {
+      sessions
+        .filter { it.id in bookmarkIds }
+        .sortedBy { it.date + it.timeInterval } // fixme:???
+    }
+
     val sessionStates: List<SessionState> by lazy {
       sessions.map {
         SessionState(
           session = it,
-          isBookmarked = it.id in bookmarks
+          isBookmarked = it.id in bookmarkIds
         )
       }
     }
 
-    val sessionMap: Map<String, SessionState> = mapOf(
-      *sessionStates.map { it.session.date to it }.toTypedArray()
-    )
+    /**
+     * session.id to SessionState
+     */
+    val sessionMap: Map<String, SessionState> by lazy {
+      mapOf(
+        *sessionStates.map { it.session.id to it }.toTypedArray()
+      )
+    }
 
     val sessionGroups: List<SessionGroupState> by lazy {
       sessionStates
@@ -57,14 +69,25 @@ class SessionListFeature(
     val isBookmarked: Boolean
   )
 
+  sealed class News {
+    object TooManyBookmarks : News()
+  }
+
   private val mutableState = MutableStateFlow(
     State(
-      bookmarks = bookmarksRepository.getBookmarksIds(),
+      bookmarkIds = bookmarksRepository.getBookmarksIds(),
       sessions = sessionsRepository.getAllSessions()
     )
   )
   val stateFlow: StateFlow<State> = mutableState
-  val state by stateFlow::value
+  private var state: State
+    get() = stateFlow.value
+    set(value) {
+      mutableState.value = value
+    }
+
+  private val newsChannel = Channel<News>()
+  val news: Flow<News> = newsChannel.receiveAsFlow()
 
   fun sessionChoose(id: String) {
     navControllerProvider.invoke().navigate(
@@ -74,19 +97,27 @@ class SessionListFeature(
 
   fun toggleBookmark(sessionId: String) {
     val session = state.sessionMap[sessionId]!!
-    val newSession = session.copy(
-      isBookmarked = !session.isBookmarked
-    )
-    val newBookmarks = if (newSession.isBookmarked) {
-      state.bookmarks + session.session.id
+    val add = !session.isBookmarked
+
+    if (add && state.bookmarkIds.size >= MAX_BOOKMARKS) {
+      newsChannel.offer(News.TooManyBookmarks)
+      return
+    }
+
+    val newBookmarks = if (add) {
+      state.bookmarkIds + session.session.id
     } else {
-      state.bookmarks - session.session.id
+      state.bookmarkIds - session.session.id
     }
 
     bookmarksRepository.saveBookmarkIds(newBookmarks)
 
-    mutableState.value = state.copy(
-      bookmarks = newBookmarks
+    state = state.copy(
+      bookmarkIds = newBookmarks
     )
+  }
+
+  companion object {
+    private const val MAX_BOOKMARKS = 3
   }
 }

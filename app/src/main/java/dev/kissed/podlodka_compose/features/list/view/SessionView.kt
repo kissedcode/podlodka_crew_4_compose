@@ -1,13 +1,12 @@
 package dev.kissed.podlodka_compose.features.list
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.R
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Dangerous
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.accompanist.glide.rememberGlidePainter
 import dev.kissed.podlodka_compose.DI
+import dev.kissed.podlodka_compose.R
 
 @Composable
 fun SessionView(
@@ -40,7 +40,7 @@ fun SessionView(
     }
   )
 
-  SessionViewInternal(
+  SessionView(
     session = session,
     image = {
       Image(
@@ -57,9 +57,9 @@ fun SessionView(
 }
 
 @Composable
-private fun SessionViewInternal(
+private fun SessionView(
   session: SessionListFeature.SessionState,
-  image: @Composable () -> Unit,
+  image: @Composable BoxScope.() -> Unit,
   onClick: () -> Unit,
   onBookmarkToggle: () -> Unit,
 ) {
@@ -135,18 +135,21 @@ private fun SessionViewInternal(
 @Preview
 @Composable
 private fun SessionPreview() {
-  SessionViewInternal(
-    session = DI.mockSessionsRepository.getAllSessions().random().let {
-      SessionListFeature.SessionState(
-        session = it,
-        isBookmarked = false
-      )
-    },
+  SessionView(
+    session =
+    SessionListFeature.SessionState(
+      session = DI.mockSessionsRepository.getAllSessions().random().copy(
+        speaker = "Jake Wharton"
+      ),
+      isBookmarked = false
+    ),
     image = {
-      Box(
+      Icon(
+        Icons.Filled.Dangerous,
+        "",
         Modifier
           .fillMaxSize()
-          .background(Color.Yellow)
+          .align(Alignment.Center)
           .clip(CircleShape)
       )
     },
