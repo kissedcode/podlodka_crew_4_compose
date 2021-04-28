@@ -2,12 +2,11 @@ package dev.kissed.podlodka_compose.features.list
 
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
-import dev.kissed.podlodka_compose.Screen
+import dev.kissed.podlodka_compose.app.Screen
 import dev.kissed.podlodka_compose.data.BookmarksRepository
 import dev.kissed.podlodka_compose.data.SessionsRepository
 import dev.kissed.podlodka_compose.models.Session
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.*
 
 class SessionListFeature(

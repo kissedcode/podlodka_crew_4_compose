@@ -1,4 +1,4 @@
-package dev.kissed.podlodka_compose
+package dev.kissed.podlodka_compose.app
 
 import android.content.Context
 import androidx.navigation.NavHostController
@@ -10,12 +10,12 @@ import dev.kissed.podlodka_compose.features.list.SessionListFeature
 
 object DI {
 
-  lateinit var appContext: Context
+  var appActivity: AppActivity? = null
 
   private lateinit var navHostController: NavHostController
 
   fun updateNavHostController(navHostController: NavHostController) {
-    this.navHostController = navHostController
+    DI.navHostController = navHostController
   }
 
   private val navControllerProvider: () -> NavHostController = {
@@ -31,7 +31,7 @@ object DI {
   }
 
   val bookmarksRepository: BookmarksRepository by lazy {
-    SharedPrefsBookmarksRepository(appContext)
+    SharedPrefsBookmarksRepository(appActivity!!.applicationContext)
   }
 
   val sessionListFeature: SessionListFeature by lazy {

@@ -1,4 +1,4 @@
-package dev.kissed.podlodka_compose
+package dev.kissed.podlodka_compose.app
 
 sealed class Screen {
   abstract val baseRoute: String

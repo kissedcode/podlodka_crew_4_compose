@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -43,7 +44,7 @@ private fun BookmarkView(session: Session, onClick: () -> Unit) {
       .size(130.dp),
     shape = RoundedCornerShape(16.dp),
     elevation = ButtonDefaults.elevation(defaultElevation = 4.dp),
-    colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
+    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.surface),
     contentPadding = PaddingValues(8.dp)
   ) {
     Column(

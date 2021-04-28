@@ -21,8 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.accompanist.glide.rememberGlidePainter
-import dev.kissed.podlodka_compose.DI
+import dev.kissed.podlodka_compose.app.DI
 import dev.kissed.podlodka_compose.R
+import dev.kissed.podlodka_compose.theming.AppColors
 
 @Composable
 fun SessionView(
@@ -70,7 +71,7 @@ private fun SessionView(
       .padding(horizontal = 16.dp),
     shape = RoundedCornerShape(16.dp),
     elevation = ButtonDefaults.elevation(defaultElevation = 4.dp),
-    colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
+    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.surface),
     contentPadding = PaddingValues(8.dp)
   ) {
     Row {
@@ -122,7 +123,7 @@ private fun SessionView(
           Icons.Filled.Favorite,
           "Favorite",
           tint = if (session.isBookmarked) {
-            Color.Red
+            AppColors.bookmarkChecked()
           } else {
             Color.Gray
           }
