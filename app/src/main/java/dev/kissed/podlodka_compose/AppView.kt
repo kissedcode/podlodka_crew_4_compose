@@ -12,7 +12,7 @@ import dev.kissed.podlodka_compose.features.list.SessionListView
 @Composable
 fun AppView() {
   val navController = rememberNavController()
-  DI.navHostController = navController
+  DI.updateNavHostController(navController)
 
   NavHost(navController, startDestination = Screen.SessionList.baseRoute) {
     composable(Screen.SessionList.baseRoute) {
@@ -22,11 +22,12 @@ fun AppView() {
     composable(
       Screen.SessionInfo.baseRoute,
       arguments = listOf(
-        navArgument(Screen.SessionInfo.PARAM_IDX_INT) { type = NavType.IntType }
+        navArgument(Screen.SessionInfo.PARAM_ID_STRING) { type = NavType.StringType }
       )
     ) {
-      val sessionIdx = it.arguments!!.getInt(Screen.SessionInfo.PARAM_IDX_INT)
-      SessionInfoView(sessionIdx)
+      val sessionId = it.arguments?.getString(Screen.SessionInfo.PARAM_ID_STRING)
+      sessionId!!
+      SessionInfoView(sessionId)
     }
   }
 }

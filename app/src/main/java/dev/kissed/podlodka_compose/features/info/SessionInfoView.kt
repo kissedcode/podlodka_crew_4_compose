@@ -9,18 +9,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import dev.kissed.podlodka_compose.DI
-import dev.kissed.podlodka_compose.features.list.SessionListView
 import kotlin.random.Random
 
 @Composable
-fun SessionInfoView(sessionIdx: Int) {
+fun SessionInfoView(sessionId: String) {
   Box(
     Modifier
       .fillMaxSize()
       .background(Color.Yellow)
   ) {
     Text(
-      DI.sessionsRepository.getAllSessions()[sessionIdx].speaker
+      DI.sessionsRepository.getAllSessions().find { it.id == sessionId }!!.speaker
     )
   }
 }
@@ -29,6 +28,6 @@ fun SessionInfoView(sessionIdx: Int) {
 @Composable
 private fun SessionInfoPreview() {
   SessionInfoView(
-    Random.nextInt(DI.mockSessionsRepository.getAllSessions().size)
+    DI.mockSessionsRepository.getAllSessions().random().id
   )
 }

@@ -9,11 +9,11 @@ sealed class Screen {
 
   object SessionInfo : Screen() {
 
-    const val PARAM_IDX_INT = "idx"
+    const val PARAM_ID_STRING = "id"
 
-    override val baseRoute: String = "info/{$PARAM_IDX_INT}"
+    override val baseRoute: String = "info/{$PARAM_ID_STRING}"
 
-    fun makeRoute(sessionIdx: Int): String =
-      baseRoute.replace("{$PARAM_IDX_INT}", sessionIdx.toString())
+    fun makeRoute(sessionId: String): String =
+      baseRoute.replace("{$PARAM_ID_STRING}", sessionId)
   }
 }

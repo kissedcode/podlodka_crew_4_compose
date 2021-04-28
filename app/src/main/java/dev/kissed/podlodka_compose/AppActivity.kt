@@ -8,6 +8,8 @@ class AppActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
+    DI.appContext = applicationContext
+
     setContent {
       AppView()
     }
