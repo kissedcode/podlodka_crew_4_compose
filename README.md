@@ -12,7 +12,6 @@
 
 ## :movie_camera: Screencast
 <img src="/screenshots/screencast.gif" width="260">
-<img src="/screenshots/screencast_2.gif" width="260">
 
 ## License
 ```
