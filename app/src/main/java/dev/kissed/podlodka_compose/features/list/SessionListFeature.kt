@@ -1,16 +1,24 @@
 package dev.kissed.podlodka_compose.features.list
 
+import android.util.Log
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
 import dev.kissed.podlodka_compose.app.Screen
 import dev.kissed.podlodka_compose.data.BookmarksRepository
 import dev.kissed.podlodka_compose.data.SessionsRepository
 import dev.kissed.podlodka_compose.models.Session
+import io.ktor.client.*
+import io.ktor.client.request.*
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 class SessionListFeature(
   sessionsRepository: SessionsRepository,
@@ -22,6 +30,8 @@ class SessionListFeature(
     val sessions: List<Session>,
     val bookmarkIds: Set<String>,
     val searchQuery: String,
+    val isLoading: Boolean,
+    val isError: Boolean,
   ) {
     val bookmarks: List<Session> by lazy {
       sessions
@@ -78,13 +88,16 @@ class SessionListFeature(
 
   sealed class News {
     object TooManyBookmarks : News()
+    object BackendProblem : News()
   }
 
   private val mutableState = MutableStateFlow(
     State(
       bookmarkIds = bookmarksRepository.getBookmarksIds(),
       sessions = sessionsRepository.getAllSessions(),
-      searchQuery = ""
+      searchQuery = "",
+      isLoading = true,
+      isError = false,
     )
   )
   val stateFlow: StateFlow<State> = mutableState
@@ -96,6 +109,40 @@ class SessionListFeature(
 
   private val newsChannel = Channel<News>()
   val news: Flow<News> = newsChannel.receiveAsFlow()
+
+  init {
+    reload()
+  }
+
+  fun reload() {
+    state = state.copy(
+      isLoading = true,
+      isError = false
+    )
+    GlobalScope.launch {
+      val sessionsRaw: String =
+        HttpClient().get(
+          "https://gist.githubusercontent.com/" +
+              "AJIEKCX/" +
+              "901e7ae9593e4afd136abe10ca7d510f/" +
+              "raw/" +
+              "61e7c1f037345370cf28b5ae6fdaffdd9e7e18d5/" +
+              "Sessions.json"
+        )
+      val sessions: List<Session> = try {
+        Json.decodeFromString(sessionsRaw)
+      } catch (e: Exception) {
+        newsChannel.offer(News.BackendProblem)
+        emptyList()
+      }
+
+      state = state.copy(
+        isLoading = false,
+        sessions = sessions,
+        isError = sessions.isEmpty()
+      )
+    }
+  }
 
   fun sessionChoose(id: String) {
     navControllerProvider.invoke().navigate(

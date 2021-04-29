@@ -1,6 +1,7 @@
 plugins {
   id("com.android.application")
   id("kotlin-android")
+  kotlin("plugin.serialization") version "1.4.30"
 }
 
 val composeVersion = "1.0.0-beta05"
@@ -52,6 +53,12 @@ dependencies {
   implementation("androidx.core:core-ktx:1.3.2")
   implementation("androidx.appcompat:appcompat:1.2.0")
   implementation("com.google.android.material:material:1.3.0")
+
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
+
+  // ktor
+  implementation("io.ktor:ktor-client-core:1.5.3")
+  implementation("io.ktor:ktor-client-cio:1.5.3")
 
   // compose
   implementation("androidx.activity:activity-compose:1.3.0-alpha07")

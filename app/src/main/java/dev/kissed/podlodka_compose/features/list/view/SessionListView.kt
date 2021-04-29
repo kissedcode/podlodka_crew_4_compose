@@ -1,5 +1,6 @@
-package dev.kissed.podlodka_compose.features.list
+package dev.kissed.podlodka_compose.features.list.view
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -7,21 +8,19 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.kissed.podlodka_compose.app.DI
+import dev.kissed.podlodka_compose.features.list.SessionListFeature
 import dev.kissed.podlodka_compose.features.list.SessionListFeature.State
-import dev.kissed.podlodka_compose.features.list.view.BookmarksView
-import dev.kissed.podlodka_compose.features.list.view.DateHeaderView
-import dev.kissed.podlodka_compose.features.list.view.HeaderView
 import dev.kissed.podlodka_compose.theming.AppColors
 import kotlinx.coroutines.flow.collect
 
@@ -37,6 +36,12 @@ fun SessionListView() {
         SessionListFeature.News.TooManyBookmarks -> {
           scaffoldState.snackbarHostState.showSnackbar(
             "Не удалось добавить сессию в избранное"
+          )
+        }
+
+        SessionListFeature.News.BackendProblem -> {
+          scaffoldState.snackbarHostState.showSnackbar(
+            "Что-то не так с загрузкой данных"
           )
         }
       }
@@ -80,11 +85,42 @@ fun SessionListView() {
       }
     }
   ) {
-    SessionListView(
-      state,
-      onSessionClick = feature::sessionChoose,
-      onBookmarkToggle = feature::toggleBookmark
-    )
+    Crossfade(state.isLoading to state.isError) { (loading, error) ->
+      when {
+        loading -> {
+          Box(
+            Modifier
+              .fillMaxSize()
+          ) {
+            CircularProgressIndicator(
+              Modifier.align(Alignment.Center)
+            )
+          }
+        }
+
+        error -> {
+          Box(
+            Modifier
+              .fillMaxSize()
+          ) {
+            Button(
+              onClick = feature::reload,
+              Modifier.align(Alignment.Center)
+            ) {
+              Text("Перезагрузить")
+            }
+          }
+        }
+
+        else -> {
+          SessionListView(
+            state,
+            onSessionClick = feature::sessionChoose,
+            onBookmarkToggle = feature::toggleBookmark
+          )
+        }
+      }
+    }
   }
 }
 
@@ -135,7 +171,9 @@ private fun ListViewPreview() {
     State(
       sessions = DI.mockSessionsRepository.getAllSessions(),
       bookmarkIds = setOf("1", "3"),
-      searchQuery = ""
+      searchQuery = "",
+      isLoading = false,
+      isError = false
     ),
     onSessionClick = {},
     onBookmarkToggle = {}

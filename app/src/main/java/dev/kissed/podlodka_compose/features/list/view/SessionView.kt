@@ -1,4 +1,4 @@
-package dev.kissed.podlodka_compose.features.list
+package dev.kissed.podlodka_compose.features.list.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -23,6 +23,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.accompanist.glide.rememberGlidePainter
 import dev.kissed.podlodka_compose.app.DI
 import dev.kissed.podlodka_compose.R
+import dev.kissed.podlodka_compose.features.list.SessionListFeature
 import dev.kissed.podlodka_compose.theming.AppColors
 
 @Composable

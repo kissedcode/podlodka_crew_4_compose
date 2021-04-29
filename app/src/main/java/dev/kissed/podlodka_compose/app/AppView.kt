@@ -2,15 +2,16 @@ package dev.kissed.podlodka_compose.app
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
 import dev.kissed.podlodka_compose.features.info.SessionInfoView
-import dev.kissed.podlodka_compose.features.list.SessionListView
-import kotlinx.coroutines.delay
+import dev.kissed.podlodka_compose.features.list.view.SessionListView
 
 @Composable
 fun AppView() {
