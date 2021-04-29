@@ -6,83 +6,20 @@ import dev.kissed.podlodka_compose.app.Screen
 import dev.kissed.podlodka_compose.data.BookmarksRepository
 import dev.kissed.podlodka_compose.data.SessionsRepository
 import dev.kissed.podlodka_compose.models.Session
-import io.ktor.client.*
-import io.ktor.client.request.*
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 
 class SessionListFeature(
   private val sessionsRepository: SessionsRepository,
   private val bookmarksRepository: BookmarksRepository,
-  private val navControllerProvider: () -> NavHostController
+  private val navControllerProvider: () -> NavHostController,
+  private val scope: CoroutineScope,
 ) {
-
-  data class State(
-    val sessions: List<Session>,
-    val bookmarkIds: Set<String>,
-    val searchQuery: String,
-    val isLoading: Boolean,
-    val isError: Boolean,
-  ) {
-    val bookmarks: List<Session> by lazy {
-      sessions
-        .filter { it.id in bookmarkIds }
-        .sortedBy { it.date + it.timeInterval }
-    }
-
-    val sessionStates: List<SessionState> by lazy {
-      sessions.map {
-        SessionState(
-          session = it,
-          isBookmarked = it.id in bookmarkIds
-        )
-      }
-    }
-
-    /**
-     * session.id to SessionState
-     */
-    val sessionMap: Map<String, SessionState> by lazy {
-      mapOf(
-        *sessionStates.map { it.session.id to it }.toTypedArray()
-      )
-    }
-
-    val sessionGroups: List<SessionGroupState> by lazy {
-      sessionStates
-        .filter {
-          it.session.speaker.contains(searchQuery, ignoreCase = true)
-              || it.session.description.contains(searchQuery, ignoreCase = true)
-        }
-        .groupBy { it.session.date }
-        .entries
-        .toList()
-        .map { (date, sessions) ->
-          SessionGroupState(
-            date = date,
-            sessions = sessions
-          )
-        }
-        .sortedBy { (date, _) -> date }
-    }
-  }
-
-  data class SessionGroupState(
-    val date: String,
-    val sessions: List<SessionState>
-  )
-
-  data class SessionState(
-    val session: Session,
-    val isBookmarked: Boolean
-  )
 
   sealed class News {
     object TooManyBookmarks : News()
@@ -90,7 +27,7 @@ class SessionListFeature(
   }
 
   private val mutableState = MutableStateFlow(
-    State(
+    SessionListState(
       bookmarkIds = bookmarksRepository.getBookmarksIds(),
       sessions = sessionsRepository.getCachedSessions(),
       searchQuery = "",
@@ -98,8 +35,8 @@ class SessionListFeature(
       isError = false,
     )
   )
-  val stateFlow: StateFlow<State> = mutableState
-  private var state: State
+  val stateFlow: StateFlow<SessionListState> = mutableState
+  private var state: SessionListState
     get() = stateFlow.value
     set(value) {
       mutableState.value = value
@@ -117,7 +54,7 @@ class SessionListFeature(
       isLoading = true,
       isError = false
     )
-    GlobalScope.launch {
+    scope.launch {
       val sessions: List<Session> = try {
         sessionsRepository.getAllSessions()
       } catch (e: Exception) {

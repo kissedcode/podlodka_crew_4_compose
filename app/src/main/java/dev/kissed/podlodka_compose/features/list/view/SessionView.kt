@@ -26,11 +26,12 @@ import dev.kissed.podlodka_compose.R
 import dev.kissed.podlodka_compose.app.App
 import dev.kissed.podlodka_compose.data.MockSessionsRepository
 import dev.kissed.podlodka_compose.features.list.SessionListFeature
+import dev.kissed.podlodka_compose.features.list.SessionState
 import dev.kissed.podlodka_compose.theming.AppColors
 
 @Composable
 fun SessionView(
-  session: SessionListFeature.SessionState,
+  session: SessionState,
   onClick: () -> Unit,
   onBookmarkToggle: () -> Unit
 ) {
@@ -62,7 +63,7 @@ fun SessionView(
 
 @Composable
 private fun SessionView(
-  session: SessionListFeature.SessionState,
+  session: SessionState,
   image: @Composable BoxScope.() -> Unit,
   onClick: () -> Unit,
   onBookmarkToggle: () -> Unit,
@@ -141,7 +142,7 @@ private fun SessionView(
 private fun SessionPreview() {
   SessionView(
     session =
-    SessionListFeature.SessionState(
+    SessionState(
       session = MockSessionsRepository.getCachedSessions().random().copy(
         speaker = "Jake Wharton"
       ),

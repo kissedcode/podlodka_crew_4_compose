@@ -3,6 +3,7 @@ package dev.kissed.podlodka_compose.app
 import androidx.navigation.NavHostController
 import dev.kissed.podlodka_compose.data.*
 import dev.kissed.podlodka_compose.features.list.SessionListFeature
+import kotlinx.coroutines.GlobalScope
 
 class DI {
 
@@ -34,7 +35,8 @@ class DI {
     SessionListFeature(
       sessionsRepository,
       bookmarksRepository,
-      navControllerProvider
+      navControllerProvider,
+      GlobalScope,
     )
   }
 }

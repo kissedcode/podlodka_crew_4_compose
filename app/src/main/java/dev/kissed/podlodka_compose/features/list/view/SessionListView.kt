@@ -19,10 +19,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.kissed.podlodka_compose.app.App
-import dev.kissed.podlodka_compose.app.DI
 import dev.kissed.podlodka_compose.data.MockSessionsRepository
 import dev.kissed.podlodka_compose.features.list.SessionListFeature
-import dev.kissed.podlodka_compose.features.list.SessionListFeature.State
+import dev.kissed.podlodka_compose.features.list.SessionListState
 import dev.kissed.podlodka_compose.theming.AppColors
 import kotlinx.coroutines.flow.collect
 
@@ -128,7 +127,7 @@ fun SessionListView() {
 
 @Composable
 private fun SessionListView(
-  state: State,
+  state: SessionListState,
   onSessionClick: (id: String) -> Unit,
   onBookmarkToggle: (id: String) -> Unit
 ) {
@@ -170,7 +169,7 @@ private fun SessionListView(
 @Composable
 private fun ListViewPreview() {
   SessionListView(
-    State(
+    SessionListState(
       sessions = MockSessionsRepository.getCachedSessions(),
       bookmarkIds = setOf("1", "3"),
       searchQuery = "",
