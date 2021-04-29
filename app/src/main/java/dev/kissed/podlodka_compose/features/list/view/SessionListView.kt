@@ -20,6 +20,7 @@ import dev.kissed.podlodka_compose.features.list.SessionListFeature.State
 import dev.kissed.podlodka_compose.features.list.view.BookmarksView
 import dev.kissed.podlodka_compose.features.list.view.DateHeaderView
 import dev.kissed.podlodka_compose.features.list.view.HeaderView
+import dev.kissed.podlodka_compose.theming.AppColors
 import kotlinx.coroutines.flow.collect
 
 @Composable
@@ -58,7 +59,7 @@ private fun SessionListView(
   LazyColumn(
     Modifier
       .fillMaxSize()
-      .background(MaterialTheme.colors.background),
+      .background(AppColors.surface()),
     verticalArrangement = Arrangement.spacedBy(16.dp),
     contentPadding = PaddingValues(bottom = 16.dp),
   ) {

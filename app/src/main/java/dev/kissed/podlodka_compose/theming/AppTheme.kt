@@ -1,6 +1,7 @@
 package dev.kissed.podlodka_compose.app
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.shapes
 import androidx.compose.material.MaterialTheme.typography
@@ -8,41 +9,29 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-
-private val LightColorPalette = lightColors(
-  primary = Color(0xFF9E9E9E),
-  primaryVariant = Color(0xFF616161),
-  secondary = Color(0xFFFFC107),
-  background = Color.White,
-  surface = Color.White,
-  onPrimary = Color.White,
-  onSecondary = Color.Black,
-  onBackground = Color.Black,
-  onSurface = Color.Black,
-)
-
-private val DarkColorPalette = darkColors(
-  primary = Color(0xFF795548),
-  primaryVariant = Color(0xFF5D4037),
-  secondary = Color(0xFFCDDC39),
-  background = Color.DarkGray,
-  surface = Color.DarkGray,
-  onPrimary = Color.White,
-  onSecondary = Color.Black,
-  onBackground = Color.White,
-  onSurface = Color.White,
-)
+import dev.kissed.podlodka_compose.theming.AppColors
 
 @Composable
 fun AppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-  val colors = if (darkTheme) {
-    DarkColorPalette
-  } else {
-    LightColorPalette
-  }
+
+  val themeColors = Colors(
+    primary = AppColors.primary(),
+    primaryVariant = AppColors.primaryVariant(),
+    secondary = AppColors.secondary(),
+    secondaryVariant = AppColors.secondary(),
+    background = AppColors.background(),
+    surface = AppColors.surface(),
+    onPrimary = AppColors.onPrimary(),
+    onSecondary = AppColors.onSecondary(),
+    onBackground = AppColors.onBackground(),
+    onSurface = AppColors.onSurface(),
+    isLight = !darkTheme,
+    error = if (darkTheme) Color(0xFFCF6679) else Color(0xFFB00020),
+    onError = if (darkTheme) Color.White else Color.Black
+  )
 
   MaterialTheme(
-    colors = colors,
+    colors = themeColors,
     typography = typography,
     shapes = shapes,
     content = content
