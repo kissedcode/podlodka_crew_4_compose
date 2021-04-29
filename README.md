@@ -10,6 +10,10 @@
 ## :camera_flash: Screenshots
 <img src="/screenshots/screenshot_1.jpeg" width="260">&emsp;<img src="/screenshots/screenshot_2.jpeg" width="260">&emsp;<img src="/screenshots/screenshot_3.jpeg" width="260">
 
+## :movie_camera: Screencast
+
+![Screencast](/screenshots/screencast.mp4)
+
 ## License
 ```
 Copyright 2021 The Android Open Source Project
