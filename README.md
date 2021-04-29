@@ -1,11 +1,11 @@
 # Ivan Miroshnichenko Podlodka Android crew 4 Jetpack Compose challenge submission
 
 ## :camera_flash: Screenshots
-<img src="/screenshots/screenshot_1.jpeg" width="260">&emsp;<img src="/screenshots/screenshot_2.jpeg" width="260">
+<img src="/screenshots/screenshot_1.jpeg" width="260">&emsp;<img src="/screenshots/screenshot_2.jpeg" width="260">&emsp;<img src="/screenshots/screenshot_3.jpeg" width="260">
 
 ## License
 ```
-Copyright 2020 The Android Open Source Project
+Copyright 2021 The Android Open Source Project
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
