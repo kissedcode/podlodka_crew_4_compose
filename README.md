@@ -12,7 +12,7 @@
 
 ## :movie_camera: Screencast
 
-![Screencast](/screenshots/screencast.mp4)
+![Screencast](/screenshots/screencast_1.mp4)
 
 ## License
 ```
