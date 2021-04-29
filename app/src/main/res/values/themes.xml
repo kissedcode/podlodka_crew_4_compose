@@ -1,7 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.Podlodka_compose" parent="Theme.MaterialComponents.NoActionBar">
-        <item name="android:statusBarColor" tools:targetApi="l">@color/primary_variant</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/surface</item>
         <item name="android:windowBackground">@color/background</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">@bool/light_status_bar</item>
     </style>
 </resources>

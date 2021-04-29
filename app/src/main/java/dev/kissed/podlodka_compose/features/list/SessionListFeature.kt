@@ -7,7 +7,10 @@ import dev.kissed.podlodka_compose.data.BookmarksRepository
 import dev.kissed.podlodka_compose.data.SessionsRepository
 import dev.kissed.podlodka_compose.models.Session
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 
 class SessionListFeature(
   sessionsRepository: SessionsRepository,
@@ -17,12 +20,13 @@ class SessionListFeature(
 
   data class State(
     val sessions: List<Session>,
-    val bookmarkIds: Set<String>
+    val bookmarkIds: Set<String>,
+    val searchQuery: String,
   ) {
     val bookmarks: List<Session> by lazy {
       sessions
         .filter { it.id in bookmarkIds }
-        .sortedBy { it.date + it.timeInterval } // fixme:???
+        .sortedBy { it.date + it.timeInterval }
     }
 
     val sessionStates: List<SessionState> by lazy {
@@ -45,6 +49,10 @@ class SessionListFeature(
 
     val sessionGroups: List<SessionGroupState> by lazy {
       sessionStates
+        .filter {
+          it.session.speaker.contains(searchQuery, ignoreCase = true)
+              || it.session.description.contains(searchQuery, ignoreCase = true)
+        }
         .groupBy { it.session.date }
         .entries
         .toList()
@@ -75,7 +83,8 @@ class SessionListFeature(
   private val mutableState = MutableStateFlow(
     State(
       bookmarkIds = bookmarksRepository.getBookmarksIds(),
-      sessions = sessionsRepository.getAllSessions()
+      sessions = sessionsRepository.getAllSessions(),
+      searchQuery = ""
     )
   )
   val stateFlow: StateFlow<State> = mutableState
@@ -113,6 +122,12 @@ class SessionListFeature(
 
     state = state.copy(
       bookmarkIds = newBookmarks
+    )
+  }
+
+  fun search(query: String) {
+    state = state.copy(
+      searchQuery = query
     )
   }
 

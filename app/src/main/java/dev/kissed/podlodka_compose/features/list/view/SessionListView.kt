@@ -4,9 +4,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.outlined.Cancel
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -41,7 +43,43 @@ fun SessionListView() {
     }
   }
 
-  Scaffold(scaffoldState = scaffoldState) {
+  Scaffold(
+    scaffoldState = scaffoldState,
+    topBar = {
+      TopAppBar(
+        backgroundColor = AppColors.surface(),
+        contentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp)
+      ) {
+        TextField(
+          value = state.searchQuery,
+          onValueChange = {
+            feature.search(it)
+          },
+          Modifier
+            .fillMaxWidth(),
+          singleLine = true,
+          leadingIcon = {
+            Icon(Icons.Outlined.Search, contentDescription = "search")
+          },
+          trailingIcon = {
+            if (state.searchQuery.isNotEmpty()) {
+              IconButton(onClick = { feature.search("") }) {
+                Icon(Icons.Filled.Close, contentDescription = "clear search query")
+              }
+            }
+          },
+          placeholder = {
+            Text("Поиск")
+          },
+          colors = TextFieldDefaults.outlinedTextFieldColors(
+            backgroundColor = AppColors.surface(),
+            focusedBorderColor = Color.Transparent,
+            unfocusedBorderColor = Color.Transparent
+          )
+        )
+      }
+    }
+  ) {
     SessionListView(
       state,
       onSessionClick = feature::sessionChoose,
@@ -96,7 +134,8 @@ private fun ListViewPreview() {
   SessionListView(
     State(
       sessions = DI.mockSessionsRepository.getAllSessions(),
-      bookmarkIds = setOf("1", "3")
+      bookmarkIds = setOf("1", "3"),
+      searchQuery = ""
     ),
     onSessionClick = {},
     onBookmarkToggle = {}
