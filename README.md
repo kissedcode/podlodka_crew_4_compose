@@ -12,7 +12,9 @@
 
 ## :movie_camera: Screencast
 
-![Screencast](/screenshots/screencast_1.mp4)
+![](/screenshots/screencast.mp4)
+![](/screenshots/screencast_1.mp4)
+![](/screenshots/screencast_2.gif)
 
 ## License
 ```
