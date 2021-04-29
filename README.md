@@ -12,6 +12,12 @@
 
 ## :movie_camera: Screencast
 
+<video width="320" height="240" controls><source src="/screenshots/screencast.mp4" type="video/mp4"></video>
+<video width="320" height="240" controls><source src="/screenshots/screencast_1.mp4" type="video/mp4"></video>
+<video width="320" height="240" controls><source src="/screenshots/screencast_2.gif" type="image/gif"></video>
+test
+<img src="/screenshots/screencast_2.gif" width="260">
+
 ![](/screenshots/screencast.mp4)
 ![](/screenshots/screencast_1.mp4)
 ![](/screenshots/screencast_2.gif)
