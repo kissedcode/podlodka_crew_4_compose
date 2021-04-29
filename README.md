@@ -1,5 +1,12 @@
 # Ivan Miroshnichenko Podlodka Android crew 4 Jetpack Compose challenge submission
 
+## Features
+- dark theme support
+- loading data from backend
+- persistable bookmarks
+- search
+- exit confirmation
+
 ## :camera_flash: Screenshots
 <img src="/screenshots/screenshot_1.jpeg" width="260">&emsp;<img src="/screenshots/screenshot_2.jpeg" width="260">&emsp;<img src="/screenshots/screenshot_3.jpeg" width="260">
 
