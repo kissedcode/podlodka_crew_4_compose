@@ -2,9 +2,11 @@ package dev.kissed.podlodka_compose.data
 
 import dev.kissed.podlodka_compose.models.Session
 
-class MockSessionsRepository : SessionsRepository {
+object MockSessionsRepository : SessionsRepository {
 
-  override fun getAllSessions(): List<Session> = sessions
+  override suspend fun getAllSessions(): List<Session> = sessions
+
+  override fun getCachedSessions(): List<Session> = sessions
 
   private val sessions: List<Session> = listOf(
     Session(

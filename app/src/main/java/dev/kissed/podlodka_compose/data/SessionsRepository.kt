@@ -3,5 +3,8 @@ package dev.kissed.podlodka_compose.data
 import dev.kissed.podlodka_compose.models.Session
 
 interface SessionsRepository {
-  fun getAllSessions(): List<Session>
+
+  suspend fun getAllSessions(): List<Session>
+
+  fun getCachedSessions(): List<Session>
 }

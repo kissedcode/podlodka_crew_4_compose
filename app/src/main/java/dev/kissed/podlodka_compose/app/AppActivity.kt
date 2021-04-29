@@ -8,7 +8,7 @@ class AppActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    DI.appActivity = this
+    App.INSTANCE.di.appActivity = this
 
     setContent {
       AppView()
@@ -18,6 +18,6 @@ class AppActivity : AppCompatActivity() {
   override fun onDestroy() {
     super.onDestroy()
 
-    DI.appActivity = null
+    App.INSTANCE.di.appActivity = null
   }
 }

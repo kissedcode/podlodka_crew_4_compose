@@ -16,7 +16,7 @@ import dev.kissed.podlodka_compose.features.list.view.SessionListView
 @Composable
 fun AppView() {
   val navController = rememberNavController()
-  DI.updateNavHostController(navController)
+  App.INSTANCE.di.updateNavHostController(navController)
 
   val backConfirm = remember { mutableStateOf(false) }
 
@@ -38,8 +38,7 @@ fun AppView() {
         confirmButton = {
           Button(
             onClick = {
-//              backConfirm.value = false
-              DI.appActivity?.finish()
+              App.INSTANCE.di.appActivity?.finish()
             },
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
           ) {

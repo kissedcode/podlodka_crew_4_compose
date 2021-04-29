@@ -18,7 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import dev.kissed.podlodka_compose.app.App
 import dev.kissed.podlodka_compose.app.DI
+import dev.kissed.podlodka_compose.data.MockSessionsRepository
 import dev.kissed.podlodka_compose.features.list.SessionListFeature
 import dev.kissed.podlodka_compose.features.list.SessionListFeature.State
 import dev.kissed.podlodka_compose.theming.AppColors
@@ -26,7 +28,7 @@ import kotlinx.coroutines.flow.collect
 
 @Composable
 fun SessionListView() {
-  val feature = DI.sessionListFeature
+  val feature = App.INSTANCE.di.sessionListFeature
   val state by feature.stateFlow.collectAsState()
 
   val scaffoldState = rememberScaffoldState()
@@ -169,7 +171,7 @@ private fun SessionListView(
 private fun ListViewPreview() {
   SessionListView(
     State(
-      sessions = DI.mockSessionsRepository.getAllSessions(),
+      sessions = MockSessionsRepository.getCachedSessions(),
       bookmarkIds = setOf("1", "3"),
       searchQuery = "",
       isLoading = false,

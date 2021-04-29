@@ -25,13 +25,14 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.accompanist.glide.rememberGlidePainter
 import dev.kissed.podlodka_compose.app.DI
 import dev.kissed.podlodka_compose.R
+import dev.kissed.podlodka_compose.app.App
 import dev.kissed.podlodka_compose.models.Session
 
 @Composable
 fun SessionInfoView(sessionId: String) {
 
   val session = remember {
-    DI.sessionsRepository.getAllSessions().find { it.id == sessionId }!!
+    App.INSTANCE.di.sessionsRepository.getCachedSessions().find { it.id == sessionId }!!
   }
 
   val imagePainter = rememberGlidePainter(
